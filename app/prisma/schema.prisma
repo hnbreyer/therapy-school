@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Student {
+  userId   String? @unique
+  user     User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id       String          @id
+  name     String
+  notes    Note[]
+  progress ClassProgress[]
+}
+
+model Subject {
+  id          String  @id
+  title       String
+  category    String
+  description String
+  teacher     String
+  color       String
+  symbol      String
+  position    Int
+  classes     Class[]
+}
+
+model Class {
+  id           String          @id
+  subjectId    String
+  title        String
+  startsAt     DateTime
+  duration     Int
+  description  String
+  recordingUrl String?
+  zoomUrl      String?
+  subject      Subject         @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  materials    Material[]
+  notes        Note[]
+  progress     ClassProgress[]
+
+  @@index([subjectId, startsAt])
+}
+
+model Material {
+  id      String @id
+  classId String
+  title   String
+  url     String
+  class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@index([classId])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  studentId String
+  classId   String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@index([studentId, classId, createdAt])
+}
+
+model ClassProgress {
+  studentId String
+  classId   String
+  watched   Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@id([studentId, classId])
+  @@index([classId])
+}
+
+model User {
+  id String @id
+  name String
+  email String @unique
+  emailVerified Boolean @default(false)
+  image String?
+  role String @default("STUDENT")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sessions Session[]
+  accounts Account[]
+  student Student?
+}
+model Session {
+  id String @id
+  expiresAt DateTime
+  token String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+model Account {
+  id String @id
+  accountId String
+  providerId String
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken String?
+  refreshToken String?
+  idToken String?
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope String?
+  password String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId])
+  @@unique([providerId, accountId])
+}
+model Verification {
+  id String @id
+  identifier String
+  value String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([identifier])
+}

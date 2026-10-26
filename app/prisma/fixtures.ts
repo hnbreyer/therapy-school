@@ -1,0 +1,12 @@
+import type { Subject, Lesson } from '../lib/catalog';
+export const subjects: Subject[] = [
+  { id: 'foundations', title: 'Foundations of psychotherapy', category: 'CORE MODULE', description: 'Build a thoughtful foundation for your work as a therapist.', teacher: 'Dr. Maya Bennett', color: 'sage', symbol: '◒' },
+  { id: 'listening', title: 'The art of therapeutic listening', category: 'CLINICAL SKILLS', description: 'Make space for connection through presence and curiosity.', teacher: 'Dr. Oliver Chen', color: 'peach', symbol: '◎' },
+  { id: 'development', title: 'Human development & attachment', category: 'CORE MODULE', description: 'Explore the relationships that shape who we become.', teacher: 'Dr. Amara Ellis', color: 'lavender', symbol: '⌘' },
+];
+export const lessons: Lesson[] = subjects.flatMap((subject, index) => [
+  { id: `${subject.id}-1`, subjectId: subject.id, title: ['A place to begin: the therapeutic relationship', 'Listening beyond words', 'Understanding attachment patterns'][index], startsAt: `2026-10-${12 + index}T17:00:00Z`, duration: 90, description: 'Explore the key concepts through a guided lecture, reflective exercises, and a discussion of clinical case examples.', recordingUrl: 'https://example.com/sample-class-recording', zoomUrl: null, materials: [{ title: 'Class reading & reflection guide', url: '/materials/reflection-guide.txt' }] },
+  { id: `${subject.id}-2`, subjectId: subject.id, title: ['Ethics, boundaries & a safe space', 'Presence, silence & reflection', 'Early relationships and the developing self'][index], startsAt: `2026-10-${19 + index}T17:00:00Z`, duration: 90, description: 'Deepen your understanding with practical frameworks and opportunities to reflect on your developing therapeutic approach.', recordingUrl: 'https://example.com/sample-class-recording', zoomUrl: null, materials: [{ title: 'Class reading & reflection guide', url: '/materials/reflection-guide.txt' }] },
+  { id: `${subject.id}-3`, subjectId: subject.id, title: ['Exploring the major therapeutic approaches', 'Asking questions that open possibilities', 'Attachment across the lifespan'][index], startsAt: `2026-10-${27 + index}T17:00:00Z`, duration: 90, description: 'Join your cohort for a live seminar, shared reflection, and questions with your tutor.', recordingUrl: null, zoomUrl: 'https://example.com/sample-zoom-meeting', materials: [{ title: 'Class reading & reflection guide', url: '/materials/reflection-guide.txt' }] },
+]);
+export const initialWatched = ['foundations-1', 'listening-1', 'development-1'];
